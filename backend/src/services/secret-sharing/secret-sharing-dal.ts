@@ -4,4 +4,4 @@ import { ormify } from "@app/lib/knex";
 
 export type TSecretSharingDALFactory = ReturnType<typeof secretSharingDALFactory>;
 
-export const secretSharingDALFactory = (db: TDbClient) => ormify(db, TableName.ApiKey);
+export const secretSharingDALFactory = (db: TDbClient) => ormify(db, TableName.SecretSharing);

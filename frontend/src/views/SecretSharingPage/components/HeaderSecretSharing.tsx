@@ -17,7 +17,7 @@ export const HeaderSecretSharing = () => {
         className="mt-2 py-2"
         leftIcon={<FontAwesomeIcon icon={faPlus} className="mx-1" />}
       >
-        Create new temporary secret
+        Create new one-time secret
       </Button>
 
       <CreateSecretSharing

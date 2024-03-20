@@ -13,9 +13,14 @@ export const SecretSharingSchema = z.object({
   updatedAt: z.date(),
   secretContent: z.string(),
   read: z.boolean().default(false).nullable().optional(),
-  passpharse: z.string().nullable().optional(),
+  readOnlyOnce: z.boolean().default(false).nullable().optional(),
+  passphrase: z.string().nullable().optional(),
   pathSlug: z.string().nullable().optional(),
-  expireAt: z.date()
+  expireAtValue: z.number().nullable().optional(),
+  expireAtUnit: z.string().nullable().optional(),
+  expireAtDate: z.date(),
+  lastReadAt: z.date().nullable().optional(),
+  projectId: z.string()
 });
 
 export type TSecretSharing = z.infer<typeof SecretSharingSchema>;

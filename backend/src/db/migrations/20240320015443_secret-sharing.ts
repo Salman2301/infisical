@@ -16,9 +16,15 @@ export async function up(knex: Knex): Promise<void> {
       t.timestamps(true, true, true);
       t.string("secretContent").notNullable();
       t.boolean("read").defaultTo(false);
-      t.string("passpharse");
-      t.string("pathSlug");
-      t.datetime("expireAt").notNullable();
+      t.boolean("readOnlyOnce").defaultTo(false);
+      t.string("passphrase");
+      t.string("pathSlug").unique().notNullable();
+      t.integer("expireAtValue").notNullable();
+      t.string("expireAtUnit").notNullable();
+      t.datetime("expireAtDate").notNullable();
+      t.datetime("lastReadAt");
+      t.string("projectId").notNullable();
+      t.foreign("projectId").references("id").inTable(TableName.Project).onDelete("CASCADE");
     });
   }
   await createUpdateAtTriggerFunction(knex);

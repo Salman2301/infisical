@@ -1,11 +1,42 @@
 import { useTranslation } from "react-i18next";
 
+import { useNotificationContext } from "@app/components/context/Notifications/NotificationProvider";
+import { useWorkspace } from "@app/context";
+import { useDeleteWsSecretSharing,useGetWsSecretSharing } from "@app/hooks/api";
+import { TSecretSharingRes } from "@app/hooks/api/secretSharing/types";
+
 import { HeaderSecretSharing } from "./components/HeaderSecretSharing";
 import { ListSecretSharing } from "./components/ListSecretSharing";
 
 export const SecretSharingPage = () => {
   const { t } = useTranslation();
-  const secretSharing: any[] = [];
+  
+  const { currentWorkspace } = useWorkspace();
+  const workspaceId = currentWorkspace?.id || "";
+
+  const { data } = useGetWsSecretSharing({ workspaceId });
+  const { mutateAsync: deleteSecretSharing } = useDeleteWsSecretSharing({ workspaceId });
+  
+  const { createNotification } = useNotificationContext();
+
+  async function handleDelete(item: TSecretSharingRes) {
+    try {
+      if (!item || !item.id) throw new Error("Missing id to delete one-time secret");
+      await deleteSecretSharing(item.id);
+
+      createNotification({
+        text: "Successfully delete secret sharing.",
+        type: "success"
+      });
+      
+    } catch (err) {
+      console.error(err);
+      createNotification({
+        text: "Failed to delete secret sharing.",
+        type: "error"
+      });
+    }
+  }
 
   return (
     <div className="flex h-full w-full justify-center bg-bunker-800 text-white">
@@ -15,10 +46,13 @@ export const SecretSharingPage = () => {
           <div />
         </div>
         <div className="text-md text-bunker-300">
-        Create a temporary secret to share with public for short time.
+          Create an one-time secret to share with public for short-time.
         </div>
         <HeaderSecretSharing />
-        <ListSecretSharing secretSharing={secretSharing} />
+        <ListSecretSharing
+          secretSharing={data?.secretSharing}
+          onDelete={(item)=>handleDelete(item)}
+        />
       </div>
     </div>
   );
