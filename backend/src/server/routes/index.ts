@@ -94,6 +94,8 @@ import { secretFolderServiceFactory } from "@app/services/secret-folder/secret-f
 import { secretFolderVersionDALFactory } from "@app/services/secret-folder/secret-folder-version-dal";
 import { secretImportDALFactory } from "@app/services/secret-import/secret-import-dal";
 import { secretImportServiceFactory } from "@app/services/secret-import/secret-import-service";
+import { secretSharingDALFactory } from "@app/services/secret-sharing/secret-sharing-dal";
+import { secretSharingServiceFactory } from "@app/services/secret-sharing/secret-sharing-service";
 import { secretTagDALFactory } from "@app/services/secret-tag/secret-tag-dal";
 import { secretTagServiceFactory } from "@app/services/secret-tag/secret-tag-service";
 import { serviceTokenDALFactory } from "@app/services/service-token/service-token-dal";
@@ -154,6 +156,7 @@ export const registerRoutes = async (
   const folderDAL = secretFolderDALFactory(db);
   const folderVersionDAL = secretFolderVersionDALFactory(db);
   const secretImportDAL = secretImportDALFactory(db);
+  const secretSharingDAL = secretSharingDALFactory(db);
   const secretVersionDAL = secretVersionDALFactory(db);
   const secretVersionTagDAL = secretVersionTagDALFactory(db);
   const secretBlindIndexDAL = secretBlindIndexDALFactory(db);
@@ -410,7 +413,7 @@ export const registerRoutes = async (
     webhookDAL,
     projectEnvDAL
   });
-
+  const secretSharingService = secretSharingServiceFactory({ secretSharingDAL });
   const secretTagService = secretTagServiceFactory({ secretTagDAL, permissionService });
   const folderService = secretFolderServiceFactory({
     permissionService,
@@ -419,6 +422,7 @@ export const registerRoutes = async (
     projectEnvDAL,
     snapshotService
   });
+
   const secretImportService = secretImportServiceFactory({
     projectEnvDAL,
     folderDAL,
@@ -577,6 +581,7 @@ export const registerRoutes = async (
     projectRole: projectRoleService,
     secret: secretService,
     secretTag: secretTagService,
+    secretSharing: secretSharingService,
     folder: folderService,
     secretImport: secretImportService,
     projectBot: projectBotService,

@@ -135,6 +135,9 @@ import {
   TSecretScanningGitRisks,
   TSecretScanningGitRisksInsert,
   TSecretScanningGitRisksUpdate,
+  TSecretSharing,
+  TSecretSharingInsert,
+  TSecretSharingUpdate,
   TSecretsInsert,
   TSecretSnapshotFolders,
   TSecretSnapshotFoldersInsert,
@@ -355,6 +358,7 @@ declare module "knex/types/tables" {
       TSecretScanningGitRisksInsert,
       TSecretScanningGitRisksUpdate
     >;
+    [TableName.SecretSharing]: Knex.CompositeTableType<TSecretSharing, TSecretSharingInsert, TSecretSharingUpdate>;
     [TableName.TrustedIps]: Knex.CompositeTableType<TTrustedIps, TTrustedIpsInsert, TTrustedIpsUpdate>;
     // Junction tables
     [TableName.JnSecretTag]: Knex.CompositeTableType<

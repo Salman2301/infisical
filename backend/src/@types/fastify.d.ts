@@ -39,6 +39,7 @@ import { TSecretServiceFactory } from "@app/services/secret/secret-service";
 import { TSecretBlindIndexServiceFactory } from "@app/services/secret-blind-index/secret-blind-index-service";
 import { TSecretFolderServiceFactory } from "@app/services/secret-folder/secret-folder-service";
 import { TSecretImportServiceFactory } from "@app/services/secret-import/secret-import-service";
+import { TSecretSharingServiceFactory } from "@app/services/secret-sharing/secret-sharing-service";
 import { TSecretTagServiceFactory } from "@app/services/secret-tag/secret-tag-service";
 import { TServiceTokenServiceFactory } from "@app/services/service-token/service-token-service";
 import { TSuperAdminServiceFactory } from "@app/services/super-admin/super-admin-service";
@@ -94,6 +95,7 @@ declare module "fastify" {
       secret: TSecretServiceFactory;
       secretTag: TSecretTagServiceFactory;
       secretImport: TSecretImportServiceFactory;
+      secretSharing: TSecretSharingServiceFactory;
       projectBot: TProjectBotServiceFactory;
       folder: TSecretFolderServiceFactory;
       integration: TIntegrationServiceFactory;
@@ -107,6 +109,7 @@ declare module "fastify" {
       secretApprovalPolicy: TSecretApprovalPolicyServiceFactory;
       secretApprovalRequest: TSecretApprovalRequestServiceFactory;
       secretRotation: TSecretRotationServiceFactory;
+      secretSharing: TSecretSharing;
       snapshot: TSecretSnapshotServiceFactory;
       saml: TSamlConfigServiceFactory;
       scim: TScimServiceFactory;

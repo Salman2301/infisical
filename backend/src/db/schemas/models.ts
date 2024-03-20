@@ -52,6 +52,7 @@ export enum TableName {
   SecretApprovalRequestSecretTag = "secret_approval_request_secret_tags",
   SecretRotation = "secret_rotations",
   SecretRotationOutput = "secret_rotation_outputs",
+  SecretSharing = "secret_sharing",
   SamlConfig = "saml_configs",
   LdapConfig = "ldap_configs",
   AuditLog = "audit_logs",
