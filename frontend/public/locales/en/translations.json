@@ -188,7 +188,8 @@
       "secrets": "Secrets",
       "members": "Members",
       "integrations": "Integrations",
-      "project-settings": "Project Settings"
+      "project-settings": "Project Settings",
+      "secret-sharing": "Secret Sharing"
     }
   },
   "section": {
@@ -304,6 +305,9 @@
       "auto-capitalization": "Auto Capitalization",
       "auto-capitalization-description": "According to standards, Infisical will automatically capitalize your keys. If you want to disable this feature, you can do so here."
     }
+  },
+  "secret-sharing": {
+    "title": "Secret Sharing"
   },
   "signup": {
     "title": "Sign Up",

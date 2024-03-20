@@ -180,7 +180,8 @@
       "secrets": "Secrets",
       "members": "Membres",
       "integrations": "Intégrations",
-      "project-settings": "Paramètres du Projet"
+      "project-settings": "Paramètres du Projet",
+      "secret-sharing": "Partage secret"
     }
   },
   "section": {
@@ -272,6 +273,9 @@
       "auto-generated": "Ceci est l'identifiant unique généré automatiquement pour votre projet. Il ne peut pas être modifié.",
       "docs": "Documentation Infisical"
     }
+  },
+  "secret-sharing": {
+    "title": "Partage secret"
   },
   "signup": {
     "title": "S'inscrire",

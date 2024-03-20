@@ -147,7 +147,8 @@
       "secrets": "시크릿",
       "members": "맴버",
       "integrations": "연동",
-      "project-settings": "프로젝트 설정"
+      "project-settings": "프로젝트 설정",
+      "secret-sharing": "비밀 공유"      
     }
   },
   "section": {
@@ -239,6 +240,9 @@
       "project-id-description2": "다양한 언어 및 프레임워크에 대한 가이드를 확인하고 싶다면, 다음을 확인하세요. ",
       "project-to-delete": "삭제할 프로젝트"
     }
+  },
+  "secret-sharing": {
+    "title": "비밀 공유"
   },
   "signup": {
     "title": "회원가입",

@@ -180,7 +180,8 @@
       "secrets": "Sırlar",
       "members": "Üyeler",
       "integrations": "Entegrasyonlar",
-      "project-settings": "Proje Ayarları"
+      "project-settings": "Proje Ayarları",
+      "secret-sharing": "Gizli ayar"
     }
   },
   "section": {
@@ -290,6 +291,9 @@
       "auto-generated": "Bu, projenizin otomatik olarak oluşturulan benzersiz tanımlayıcısıdır. Değiştirilemez..",
       "docs": "Infisical Dokümanları"
     }
+  },
+  "secret-sharing": {
+    "title": "Gizli ayar"
   },
   "signup": {
     "title": "Kayıt olun",

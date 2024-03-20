@@ -25,6 +25,7 @@ export type MenuItemProps<T extends ElementType> = {
   isDisabled?: boolean;
   isSelected?: boolean;
   className?: string;
+  iconClassName?: string;
   inputRef?: Ref<T>;
 };
 
@@ -32,6 +33,7 @@ export const MenuItem = <T extends ElementType = "button">({
   children,
   icon,
   className,
+  iconClassName,
   isDisabled,
   isSelected,
   as: Item = "button",
@@ -74,7 +76,7 @@ export const MenuItem = <T extends ElementType = "button">({
                 animationData={require(`../../../../public/lotties/${icon}.json`)}
                 loop={false}
                 autoplay={false}
-                className="my-auto ml-[0.1rem] mr-3"
+                className={twMerge("my-auto ml-[0.1rem] mr-3", iconClassName)}
               />
             )}
             <span className="flex-grow text-left">{children}</span>

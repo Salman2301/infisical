@@ -175,7 +175,8 @@
       "secrets": "Segredos",
       "members": "Membros",
       "integrations": "Integrações",
-      "project-settings": "Configurações do Projeto"
+      "project-settings": "Configurações do Projeto",
+      "secret-sharing": "Compartilhamento secreto"
     }
   },
   "section": {
@@ -269,6 +270,9 @@
       "auto-capitalization": "Converter em caixa alta automaticamente",
       "auto-capitalization-description": "Por padrão, Infisical converte automaticamente as chaves em caixa alta. Se você quiser desativar essa funcionalidade, pode fazê-lo aqui."
     }
+  },
+  "secret-sharing": {
+    "title": "Compartilhamento secreto"
   },
   "signup": {
     "title": "Inscrever-se",

@@ -587,6 +587,20 @@ export const AppLayout = ({ children }: LayoutProps) => {
                           </MenuItem>
                         </a>
                       </Link>
+                      <Link href={`/project/${currentWorkspace?.id}/sharing`} passHref>
+                        <a>
+                          <MenuItem
+                            isSelected={
+                              router.asPath === `/project/${currentWorkspace?.id}/sharing`
+                            }
+                            icon="sharing"
+                            // Prefer to move to lottie file with a premium account to the exact scale below instead of classname
+                            iconClassName="scale-[85%]"
+                          >
+                            {t("nav.menu.secret-sharing")}
+                          </MenuItem>
+                        </a>
+                      </Link>
                     </Menu>
                   ) : (
                     <Menu className="mt-4">
