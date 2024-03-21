@@ -44,6 +44,8 @@ export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharing
     if (!isValidSecret(currSecret)) throw new Error("Invalid secret");
     if (currSecret.readOnlyOnce) {
       await secretSharingDAL.deleteById(currSecret.id);
+    } else {
+      await secretSharingDAL.updateById(currSecret.id, { read: true, lastReadAt: new Date() });
     }
     return {
       cipher: currSecret.secretContent,
