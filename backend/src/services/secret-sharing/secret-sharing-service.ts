@@ -6,6 +6,7 @@ type TSecretSharingServiceFactoryDep = {
   secretSharingDAL: TSecretSharingDALFactory;
 };
 
+type TSecretSharingRevealRes = { cipher: string; iv: string; isPasswordProtected: boolean };
 export type TSecretSharingServiceFactory = ReturnType<typeof secretSharingServiceFactory>;
 
 export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharingServiceFactoryDep) => {
@@ -39,7 +40,7 @@ export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharing
     return isValidSecret(currSecret);
   };
 
-  const revealSecretSharing = async ({ pathSlug }: FindByPathSlug): Promise<{ cipher: string; iv: string }> => {
+  const revealSecretSharing = async ({ pathSlug }: FindByPathSlug): Promise<TSecretSharingRevealRes> => {
     const currSecret = await secretSharingDAL.findOne({ pathSlug });
     if (!isValidSecret(currSecret)) throw new Error("Invalid secret");
     if (currSecret.readOnlyOnce) {
@@ -49,7 +50,8 @@ export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharing
     }
     return {
       cipher: currSecret.secretContent,
-      iv: currSecret.iv
+      iv: currSecret.iv,
+      isPasswordProtected: !!currSecret.isPasswordProtected
     };
   };
 

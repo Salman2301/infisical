@@ -17,10 +17,10 @@ export async function up(knex: Knex): Promise<void> {
       t.string("secretContent").notNullable();
       t.boolean("read").defaultTo(false);
       t.boolean("readOnlyOnce").defaultTo(false);
-      t.string("passphrase");
       t.string("pathSlug").unique().notNullable();
       t.integer("expireAtValue").notNullable();
       t.string("expireAtUnit").notNullable();
+      t.boolean("isPasswordProtected").defaultTo(false);
       t.datetime("expireAtDate").notNullable();
       t.datetime("lastReadAt");
       t.string("iv").notNullable();

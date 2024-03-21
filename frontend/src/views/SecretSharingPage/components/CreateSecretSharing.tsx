@@ -32,8 +32,9 @@ const createSecretSharing = z.object({
   expireAtValue: z.string().regex(/^\d+$/, "Enter a valid number"),
   expireAtUnit: z.enum(["day", "min", "hour"]),
   pathSlug: z.string().trim().min(1, "Path slug is required field"),
-  passphrase: z.string().trim().optional(),
-  readOnlyOnce: z.boolean().optional()
+  readOnlyOnce: z.boolean().optional(),
+  password: z.string().optional(), // We are not sending this data to server
+  isPasswordProtected: z.boolean().optional()
 });
 
 type FormData = z.infer<typeof createSecretSharing>;
@@ -72,7 +73,8 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
     expireAtValue,
     expireAtUnit,
     pathSlug,
-    readOnlyOnce
+    readOnlyOnce,
+    password
   }: FormData) => {
     try {
       const expireAtDate = new Date();
@@ -92,8 +94,7 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
         default:
           throw new Error("Invalid expire unit");
       }
-
-      const { cipher, iv } = await encrypt(secretContent);
+      const { cipher, iv } = await encrypt(secretContent, password);
       await createServiceSharing({
         projectId: workspaceId,
         expireAtDate,
@@ -102,7 +103,8 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
         pathSlug,
         readOnlyOnce: !!readOnlyOnce,
         secretContent: cipher,
-        iv
+        iv,
+        isPasswordProtected: !!password
       });
 
       // Show a dialog to copy expireAtDate publish sharable URL?
@@ -180,6 +182,20 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
             render={({ field, fieldState: { error } }) => (
               <FormControl label="Path Slug" isError={Boolean(error)} errorText={error?.message}>
                 <PathInput {...field} urlPrefix={`${window.location.origin}/l/`} />
+              </FormControl>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="password"
+            render={({ field, fieldState: { error } }) => (
+              <FormControl
+                label="Password (optional)"
+                isError={Boolean(error)}
+                errorText={error?.message}
+              >
+                <Input {...field} className="ring-1 ring-bunker-400/60" />
               </FormControl>
             )}
           />

@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { FormLabel, TextArea } from "@app/components/v2";
+import { useNotificationContext } from "@app/components/context/Notifications/NotificationProvider";
+import { Button, FormLabel, Input, TextArea } from "@app/components/v2";
 import { decrypt } from "@app/helpers/secretSharing";
 import {
   useRevealSecretSharing,
@@ -14,12 +15,16 @@ enum ViewState {
   Loading = "loading",
   Valid = "valid",
   Revealed = "reveal",
+  RequirePassword = "password",
   Invalid = "invalid"
 }
 
 export const ViewSecretSharing = () => {
+  const { createNotification } = useNotificationContext();
+
   const router = useRouter();
   const [currView, setCurrView] = useState<ViewState>(ViewState.Loading);
+  const [password, setPassword] = useState<string>();
   const [pathSlug, setPathSlug] = useState<string>("");
   const [decryptSecret, setDecryptSecret] = useState<string>("");
 
@@ -35,17 +40,31 @@ export const ViewSecretSharing = () => {
     if (!isLoading && !validSecret) setCurrView(ViewState.Invalid);
   }, [validSecret, isLoading]);
 
-  useEffect(() => {
+  function tryDecrypt() {
     if (!revealSecret) return;
-    decrypt(revealSecret.cipher, revealSecret.iv)
+    decrypt(revealSecret.cipher, revealSecret.iv, password)
       .then((decryptedSecret) => {
         setDecryptSecret(decryptedSecret.data);
         setCurrView(ViewState.Revealed);
       })
       .catch((err) => {
         console.error(err);
+        createNotification({
+          text: "Failed to decrypt secret",
+          type: "error"
+        });
         setCurrView(ViewState.Invalid);
       });
+  }
+
+  useEffect(() => {
+    if (!revealSecret) return;
+    console.log({ a: revealSecret.isPasswordProtected, revealSecret });
+    if (revealSecret.isPasswordProtected) {
+      setCurrView(ViewState.RequirePassword);
+    } else {
+      tryDecrypt();
+    }
   }, [revealSecret]);
 
   return (
@@ -55,6 +74,19 @@ export const ViewSecretSharing = () => {
         <div className="w-[480px]">
           <FormLabel label="Your secret" />
           <TextArea rows={8} value={decryptSecret!} readOnly className="ring-1" />
+        </div>
+      )}
+      {ViewState.RequirePassword === currView && (
+        <div className="h-5/12 flex w-5/12 flex-col items-center justify-center gap-2 rounded-md bg-bunker-500 p-2">
+          <p className="mb-2 text-2xl">Content is encrypted</p>
+          <p className="text-md text-gray-400">Enter password to decrypt!</p>
+
+          <div className="w-60">
+            <Input value={password} onChange={(e) => setPassword(e.target.value)} />
+          </div>
+          <Button size="xs" onClick={() => tryDecrypt()} className="py-2 px-4">
+            Submit
+          </Button>
         </div>
       )}
       {ViewState.Invalid === currView && (
