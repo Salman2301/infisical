@@ -48,20 +48,19 @@ export const PathInput = forwardRef<HTMLInputElement, PathInputProps>(
           />
         </div>
 
-
-        <Tooltip content={t("common.click-to-copy")}>
-          <IconButton
-            ariaLabel="copy icon"
-            colorSchema="secondary"
-            className="outline-none focus:ring-1 focus:ring-primary-400/50"
-            onClick={() => {
-              navigator.clipboard.writeText(`${urlPrefix || ""}${props.value}` ?? "");
-              setIsUrlCopied.on();
-            }}
-          >
-            <FontAwesomeIcon icon={isUrlCopied ? faCheck : faCopy} />  
-          </IconButton>
+        <IconButton
+          ariaLabel="copy icon"
+          colorSchema="secondary"
+          className="outline-none focus:ring-1 focus:ring-primary-400/50"
+          onClick={() => {
+            navigator.clipboard.writeText(`${urlPrefix || ""}${props.value}` ?? "");
+            setIsUrlCopied.on();
+          }}
+        >
+          <Tooltip content={t("common.click-to-copy")}>
+            <FontAwesomeIcon icon={isUrlCopied ? faCheck : faCopy} />
           </Tooltip>
+        </IconButton>
       </div>
     );
   }

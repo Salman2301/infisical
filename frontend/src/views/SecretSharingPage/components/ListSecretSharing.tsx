@@ -1,7 +1,10 @@
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { twMerge } from "tailwind-merge";
 
 import { useNotificationContext } from "@app/components/context/Notifications/NotificationProvider";
-import { EmptyState, Select, SelectItem } from "@app/components/v2";
+import { EmptyState, Select, SelectItem, Tooltip } from "@app/components/v2";
+import { timeLeft } from "@app/helpers/time";
 import { usePopUp } from "@app/hooks";
 import { TSecretSharingRes } from "@app/hooks/api/secretSharing/types";
 
@@ -45,7 +48,7 @@ export const ListSecretSharing = ({ secretSharing, onDelete }: Props) => {
       {secretSharing?.length ? (
         secretSharing?.map((item, i) => {
           const isActive = new Date(item.expireAtDate).getTime() > new Date().getTime();
-          const url = `${window?.location?.origin}/l/${item.pathSlug}`
+          const url = `${window?.location?.origin}/l/${item.pathSlug}`;
           return (
             <div
               className="max-w-8xl flex justify-between rounded-md border border-mineshaft-600 bg-mineshaft-800 p-3"
@@ -64,9 +67,21 @@ export const ListSecretSharing = ({ secretSharing, onDelete }: Props) => {
                     !isActive && "bg-bunker-400 text-bunker-200"
                   )}
                 >
-                  {isActive ? "Active" : "Expired"}
+                  {isActive ? `Active - ${timeLeft(item.expireAtDate)}` : "Expired"}
                 </div>
-              </div>
+                {item.lastReadAt && (
+                  <div
+                    className={twMerge(
+                      "flex h-6 items-center rounded-lg bg-bunker-900 px-4 py-0 text-sm text-white",
+                      !isActive && "bg-bunker-400 text-bunker-200"
+                    )}
+                  >
+                    <Tooltip content={`Viewed at ${timeLeft(item.lastReadAt)} ago`}>                
+                      <FontAwesomeIcon icon={faEye} />
+                    </Tooltip>
+                  </div>
+                )}
+                </div>
               <div className="flex">
                 <Select
                   value=""
@@ -90,7 +105,7 @@ export const ListSecretSharing = ({ secretSharing, onDelete }: Props) => {
           title="No one-time secrets found. Create a new one to manage your one-time secrets."
         />
       )}
-      
+
       <UpdateSecretSharing
         secretSharing={popUp.updateSecretSharing.data as TSecretSharingRes}
         isOpen={popUp.updateSecretSharing.isOpen}

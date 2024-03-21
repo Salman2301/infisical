@@ -10,6 +10,7 @@ export type UseWsSecretSharingDurationMutationProps = {
 export type TSecretSharingRes = {
   id: string;
   read: boolean;
+  lastReadAt: Date;
 } & TSecretSharing;
 
 
