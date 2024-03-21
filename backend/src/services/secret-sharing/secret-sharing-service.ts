@@ -1,6 +1,7 @@
 import { TSecretSharing } from "@app/db/schemas";
 
 import { TSecretSharingDALFactory } from "./secret-sharing-dal";
+import { isValidSecret } from "./secret-sharing-fns";
 
 type TSecretSharingServiceFactoryDep = {
   secretSharingDAL: TSecretSharingDALFactory;
@@ -13,6 +14,8 @@ type TSecretSharingUpdate = {
   expireAtDate: Date;
   expireAtUnit: string;
 };
+
+type FindByPathSlug = { pathSlug: string };
 
 type TSecretSharingRevealRes = { cipher: string; iv: string; isPasswordProtected: boolean };
 export type TSecretSharingServiceFactory = ReturnType<typeof secretSharingServiceFactory>;
@@ -42,13 +45,6 @@ export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharing
   };
 
   // Publish secret sharing services
-  type FindByPathSlug = { pathSlug: string };
-
-  function isValidSecret(currSecret: TSecretSharing) {
-    if (!currSecret || !currSecret.expireAtDate || !currSecret.secretContent) return false;
-    const now = new Date().getTime();
-    return now < new Date(currSecret.expireAtDate).getTime();
-  }
 
   const isPathTaken = async (pathSlug: string): Promise<boolean> => {
     const currSecret = await secretSharingDAL.findOne({ pathSlug });

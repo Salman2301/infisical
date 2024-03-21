@@ -2,11 +2,19 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiRequest } from "@app/config/request";
 
-import { TSecretSharing, TSecretSharingDuration, TSecretSharingRes, UseWsSecretSharingDurationMutationProps, UseWsSecretSharingMutationProps } from "./types";
+import {
+  TSecretSharing,
+  TSecretSharingDuration,
+  TSecretSharingRes,
+  TSecretSharingRevealRes,
+  UseWsSecretSharingDurationMutationProps,
+  UseWsSecretSharingMutationProps
+} from "./types";
 
 const secretSharingKeys = {
   getSecretSharingWorkspace: (workspaceId: string) => [{ workspaceId }, "secret-sharing"] as const,
-  getRevealSecretSharing: (slug: string, isValid: boolean) => [{ slug, isValid }, "reveal-secret-sharing"] as const,
+  getRevealSecretSharing: (slug: string, isValid: boolean) =>
+    [{ slug, isValid }, "reveal-secret-sharing"] as const,
   getValidSecretSharing: (slug: string) => [{ slug }, "valid-secret-sharing"] as const
 };
 
@@ -19,7 +27,7 @@ const fetchWorkspaceSecretSharing = async (workspaceId: string) => {
 
 const fetchRevealSecretSharing = async (slug: string, isValid: boolean) => {
   if (!slug || !isValid) return null;
-  const { data } = await apiRequest.get<{cipher: string, iv: string, isPasswordProtected: boolean}>(
+  const { data } = await apiRequest.get<TSecretSharingRevealRes>(
     `/api/v1/secret-sharing/reveal/${slug}`
   );
   return data;
@@ -27,13 +35,9 @@ const fetchRevealSecretSharing = async (slug: string, isValid: boolean) => {
 
 const fetchValidSecretSharing = async (slug: string) => {
   if (!slug) return null;
-  const { data } = await apiRequest.get<boolean>(
-    `/api/v1/secret-sharing/valid/${slug}`
-  );
+  const { data } = await apiRequest.get<boolean>(`/api/v1/secret-sharing/valid/${slug}`);
   return data;
 };
-
-
 
 export const useGetWsSecretSharing = ({ workspaceId }: UseWsSecretSharingMutationProps) => {
   return useQuery({
@@ -43,7 +47,7 @@ export const useGetWsSecretSharing = ({ workspaceId }: UseWsSecretSharingMutatio
   });
 };
 
-export const useRevealSecretSharing = ({ slug, isValid }: {slug: string, isValid: boolean}) => {
+export const useRevealSecretSharing = ({ slug, isValid }: { slug: string; isValid: boolean }) => {
   return useQuery({
     queryKey: secretSharingKeys.getRevealSecretSharing(slug, isValid),
     queryFn: () => fetchRevealSecretSharing(slug, isValid),
@@ -51,8 +55,7 @@ export const useRevealSecretSharing = ({ slug, isValid }: {slug: string, isValid
   });
 };
 
-
-export const useValidSecretSharing = ({ slug }: {slug: string}) => {
+export const useValidSecretSharing = ({ slug }: { slug: string }) => {
   return useQuery({
     queryKey: secretSharingKeys.getValidSecretSharing(slug),
     queryFn: () => fetchValidSecretSharing(slug),
@@ -79,8 +82,10 @@ export const useCreateWsSecretSharing = ({ workspaceId }: UseWsSecretSharingMuta
   });
 };
 
-
-export const useUpdateWsSecretSharing = ({ workspaceId, secretSharingId }: UseWsSecretSharingDurationMutationProps) => {
+export const useUpdateWsSecretSharing = ({
+  workspaceId,
+  secretSharingId
+}: UseWsSecretSharingDurationMutationProps) => {
   const queryClient = useQueryClient();
 
   return useMutation<TSecretSharingRes, {}, TSecretSharingDuration>({

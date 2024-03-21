@@ -1,11 +1,11 @@
 export type UseWsSecretSharingMutationProps = {
-  workspaceId: string
+  workspaceId: string;
 };
 
 export type UseWsSecretSharingDurationMutationProps = {
   workspaceId: string;
   secretSharingId: string;
-}
+};
 
 export type TSecretSharingRes = {
   id: string;
@@ -13,6 +13,11 @@ export type TSecretSharingRes = {
   lastReadAt: Date;
 } & TSecretSharing;
 
+export type TSecretSharingRevealRes = {
+  cipher: string;
+  iv: string;
+  isPasswordProtected: boolean;
+};
 
 export type TSecretSharing = {
   secretContent: string;
@@ -25,10 +30,10 @@ export type TSecretSharing = {
   projectId: string;
   iv: string;
   isPasswordProtected?: boolean;
-}
+};
 
 export type TSecretSharingDuration = {
   expireAtDate: Date;
   expireAtValue: string;
   expireAtUnit: "min" | "hour" | "day";
-}
+};
