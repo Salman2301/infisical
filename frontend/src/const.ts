@@ -21,6 +21,7 @@ export const publicPaths = [
   "/saml-sso",
   "/login/provider/success", // TODO: change
   "/login/provider/error", // TODO: change
+  "/l/[id]",
   "/login/sso",
   "/admin/signup"
 ];
