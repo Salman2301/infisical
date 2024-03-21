@@ -17,6 +17,7 @@ export * from "./Input";
 export * from "./Menu";
 export * from "./Modal";
 export * from "./Pagination";
+export * from "./PathInput";
 export * from "./Popoverv2";
 export * from "./SecretInput";
 export * from "./Select";

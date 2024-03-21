@@ -11,6 +11,7 @@ export type CheckboxProps = Omit<
   children?: ReactNode;
   id: string;
   isDisabled?: boolean;
+  isError?: boolean;
   isChecked?: boolean;
   isRequired?: boolean;
   checkIndicatorBg?: string | undefined;
@@ -23,6 +24,7 @@ export const Checkbox = ({
   isChecked,
   isDisabled,
   isRequired,
+  isError,
   checkIndicatorBg,
   ...props
 }: CheckboxProps): JSX.Element => {
@@ -34,6 +36,7 @@ export const Checkbox = ({
           isDisabled && "bg-bunker-400 hover:bg-bunker-400",
           isChecked && "bg-primary hover:bg-primary",
           Boolean(children) && "mr-3",
+          isError && "bg-red-600 hover:bg-red-600",
           className
         )}
         required={isRequired}

@@ -1,10 +1,6 @@
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { faCheck, faCopy } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 
 import { useNotificationContext } from "@app/components/context/Notifications/NotificationProvider";
@@ -12,11 +8,11 @@ import {
   Button,
   Checkbox,
   FormControl,
-  IconButton,
   Input,
   Modal,
   ModalClose,
   ModalContent,
+  PathInput,
   Select,
   SelectItem,
   TextArea
@@ -24,7 +20,6 @@ import {
 import { useWorkspace } from "@app/context";
 import { encrypt } from "@app/helpers/secretSharing";
 import { randomSlug } from "@app/helpers/slug";
-import { useToggle } from "@app/hooks";
 import { useCreateWsSecretSharing } from "@app/hooks/api";
 
 type Props = {
@@ -59,13 +54,11 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
       readOnlyOnce: false
     }
   });
-  const { t } = useTranslation();
   const { createNotification } = useNotificationContext();
   const { currentWorkspace } = useWorkspace();
   const workspaceId = currentWorkspace?.id || "";
 
   const { mutateAsync: createServiceSharing } = useCreateWsSecretSharing({ workspaceId });
-  const [isUrlCopied, setIsUrlCopied] = useToggle(false);
 
   useEffect(() => {
     setValue("pathSlug", randomSlug());
@@ -73,15 +66,6 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
       reset();
     }
   }, [isOpen]);
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (isUrlCopied) {
-      timer = setTimeout(() => setIsUrlCopied.off(), 2000);
-    }
-
-    return () => clearTimeout(timer);
-  }, [isUrlCopied]);
 
   const onFormSubmit = async ({
     secretContent,
@@ -195,41 +179,7 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
             name="pathSlug"
             render={({ field, fieldState: { error } }) => (
               <FormControl label="Path Slug" isError={Boolean(error)} errorText={error?.message}>
-                <div className="flex justify-between gap-4">
-                  <div
-                    className={twMerge(
-                      "flex w-full rounded-md bg-mineshaft-900 px-2 outline-none ring-1 ring-bunker-400/60 focus-within:ring-1 focus-within:ring-primary-400/50",
-                      Boolean(error) && "ring-red/50 focus-within:ring-red/50"
-                    )}
-                  >
-                    <span className="flex items-center text-bunker-400">
-                      {window.location.origin}/l/
-                    </span>
-                    <Input
-                      {...field}
-                      variant="plain"
-                      className="pl-0 focus:ring-0"
-                      id="path-slug-input"
-                    />
-                  </div>
-
-                  <IconButton
-                    ariaLabel="copy icon"
-                    colorSchema="secondary"
-                    className="group relative"
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        `${window.location.origin}/l/${field.value}` ?? ""
-                      );
-                      setIsUrlCopied.on();
-                    }}
-                  >
-                    <FontAwesomeIcon icon={isUrlCopied ? faCheck : faCopy} />
-                    <span className="absolute -left-8 -top-20 hidden w-28 translate-y-full rounded-md bg-bunker-800 py-2 pl-3 text-center text-sm text-gray-400 group-hover:flex group-hover:animate-fadeIn">
-                      {t("common.click-to-copy")}
-                    </span>
-                  </IconButton>
-                </div>
+                <PathInput {...field} urlPrefix={`${window.location.origin}/l/`} />
               </FormControl>
             )}
           />
