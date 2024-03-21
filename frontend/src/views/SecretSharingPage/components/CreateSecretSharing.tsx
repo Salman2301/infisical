@@ -116,7 +116,7 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
     } catch (error) {
       console.error(error);
       createNotification({
-        text: "Failed to create secret sharing",
+        text: "Failed to create one-time secret",
         type: "error"
       });
     }
@@ -125,7 +125,7 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
   return (
     <Modal isOpen={isOpen} onOpenChange={onToggle}>
       <ModalContent
-        title="Create secret sharing"
+        title="Create one-time secret"
         subTitle="Create an one-time secret to share with public for short-time."
         className="overflow-auto"
       >
@@ -209,7 +209,7 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
                   isChecked={field.value}
                   onCheckedChange={field.onChange}
                 >
-                  Delete content immediately after read!
+                  Delete after first read?
                 </Checkbox>
               </FormControl>
             )}

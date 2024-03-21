@@ -4,7 +4,7 @@ import { faCheck, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { twMerge } from "tailwind-merge";
 
-import { IconButton, Input } from "@app/components/v2";
+import { IconButton, Input, Tooltip } from "@app/components/v2";
 import { useToggle } from "@app/hooks";
 
 type Props = {
@@ -48,20 +48,20 @@ export const PathInput = forwardRef<HTMLInputElement, PathInputProps>(
           />
         </div>
 
-        <IconButton
-          ariaLabel="copy icon"
-          colorSchema="secondary"
-          className="group relative"
-          onClick={() => {
-            navigator.clipboard.writeText(`${urlPrefix||""}${props.value}` ?? "");
-            setIsUrlCopied.on();
-          }}
-        >
-          <FontAwesomeIcon icon={isUrlCopied ? faCheck : faCopy} />
-          <span className="absolute -left-8 -top-20 hidden w-28 translate-y-full rounded-md bg-bunker-800 py-2 pl-3 text-center text-sm text-gray-400 group-hover:flex group-hover:animate-fadeIn">
-            {t("common.click-to-copy")}
-          </span>
-        </IconButton>
+
+        <Tooltip content={t("common.click-to-copy")}>
+          <IconButton
+            ariaLabel="copy icon"
+            colorSchema="secondary"
+            className="outline-none focus:ring-1 focus:ring-primary-400/50"
+            onClick={() => {
+              navigator.clipboard.writeText(`${urlPrefix || ""}${props.value}` ?? "");
+              setIsUrlCopied.on();
+            }}
+          >
+            <FontAwesomeIcon icon={isUrlCopied ? faCheck : faCopy} />  
+          </IconButton>
+          </Tooltip>
       </div>
     );
   }
