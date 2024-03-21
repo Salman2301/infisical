@@ -32,7 +32,7 @@ const createSecretSharingSchema = z.object({
   secretContent: z.string({ required_error: "Secret Content is required field" }).trim().min(1),
   expireAtValue: z.string().regex(/^\d+$/, "Enter a valid number"),
   expireAtUnit: z.enum(["day", "min", "hour"]),
-  pathSlug: z.string().trim().min(1, "Path slug is required field"),
+  pathSlug: z.string().trim().min(1, "Path slug is required field").regex(/^[a-zA-Z0-9-]+$/g, "Alpha-numerical and hyphens only allowed"),
   readOnlyOnce: z.boolean().optional(),
   password: z.string().optional(), // We are not sending this data to server
   isPasswordProtected: z.boolean().optional()
