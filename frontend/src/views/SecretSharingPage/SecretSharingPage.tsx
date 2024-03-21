@@ -32,13 +32,13 @@ export const SecretSharingPage = () => {
       handlePopUpClose("deleteSecretSharing");
 
       createNotification({
-        text: "Successfully delete secret sharing.",
+        text: "Successfully deleted one-time secret.",
         type: "success"
       });
     } catch (err) {
       console.error(err);
       createNotification({
-        text: "Failed to delete secret sharing.",
+        text: "Failed to delete one-time secret.",
         type: "error"
       });
     }
@@ -52,7 +52,7 @@ export const SecretSharingPage = () => {
           <div />
         </div>
         <div className="text-md text-bunker-300">
-          Create an one-time secret to share with public for short-time.
+          Create a one-time secret to share publicly for a short period.
         </div>
         <HeaderSecretSharing />
         <ListSecretSharing

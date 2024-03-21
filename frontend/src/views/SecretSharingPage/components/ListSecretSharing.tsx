@@ -44,7 +44,7 @@ export const ListSecretSharing = ({ secretSharing, onDelete }: Props) => {
   }
 
   return (
-    <div className="mt-2 flex flex-col space-y-4 pt-0">
+    <div className="mt-6 flex flex-col space-y-4 pt-0">
       {secretSharing?.length ? (
         secretSharing?.map((item, i) => {
           const isActive = new Date(item.expireAtDate).getTime() > new Date().getTime();
@@ -76,12 +76,12 @@ export const ListSecretSharing = ({ secretSharing, onDelete }: Props) => {
                       !isActive && "bg-bunker-400 text-bunker-200"
                     )}
                   >
-                    <Tooltip content={`Viewed at ${timeLeft(item.lastReadAt)} ago`}>                
+                    <Tooltip content={`Viewed - ${timeLeft(item.lastReadAt)} ago`}>
                       <FontAwesomeIcon icon={faEye} />
                     </Tooltip>
                   </div>
                 )}
-                </div>
+              </div>
               <div className="flex">
                 <Select
                   value=""

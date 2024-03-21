@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { SecretSharingSchema } from "@app/db/schemas";
+import { BadRequestError } from "@app/lib/errors";
 import { verifyAuth } from "@app/server/plugins/auth/verify-auth";
 import { AuthMode } from "@app/services/auth/auth-type";
 
@@ -49,6 +50,14 @@ export const registerSecretSharingRouter = async (server: FastifyZodProvider) =>
     },
     onRequest: verifyAuth([AuthMode.JWT]),
     handler: async (req) => {
+      const isPathTaken = await server.services.secretSharing.isPathTaken(req.body.pathSlug);
+
+      if (isPathTaken) {
+        throw new BadRequestError({
+          message: `Path (/${req.body.pathSlug}) already taken`
+        });
+      }
+
       const secretSharing = await server.services.secretSharing.createSecretSharing({
         projectId: req.params.workspaceId,
         secretContent: req.body.secretContent,

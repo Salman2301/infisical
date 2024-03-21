@@ -41,6 +41,7 @@ export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharing
     return { secretSharing: secretSharing[0] };
   };
 
+  // Publish secret sharing services
   type FindByPathSlug = { pathSlug: string };
 
   function isValidSecret(currSecret: TSecretSharing) {
@@ -48,6 +49,11 @@ export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharing
     const now = new Date().getTime();
     return now < new Date(currSecret.expireAtDate).getTime();
   }
+
+  const isPathTaken = async (pathSlug: string): Promise<boolean> => {
+    const currSecret = await secretSharingDAL.findOne({ pathSlug });
+    return !!currSecret;
+  };
 
   const validSecretSharing = async ({ pathSlug }: FindByPathSlug): Promise<boolean> => {
     const currSecret = await secretSharingDAL.findOne({ pathSlug });
@@ -71,6 +77,7 @@ export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharing
 
   return {
     validSecretSharing,
+    isPathTaken,
     listSecretSharing,
     createSecretSharing,
     revealSecretSharing,

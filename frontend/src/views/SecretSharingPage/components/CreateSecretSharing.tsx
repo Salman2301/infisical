@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { z } from "zod";
 
 import { useNotificationContext } from "@app/components/context/Notifications/NotificationProvider";
@@ -115,10 +116,18 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
       });
     } catch (error) {
       console.error(error);
+
+      let errorMessage: string = "Failed to create one-time secret!";
+      if (axios.isAxiosError(error)) {
+        const { message } = error?.response?.data as { message: string };
+        if(message) errorMessage = message;
+      }
+
       createNotification({
-        text: "Failed to create one-time secret",
+        text: errorMessage,
         type: "error"
       });
+
     }
   };
 
@@ -126,7 +135,7 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
     <Modal isOpen={isOpen} onOpenChange={onToggle}>
       <ModalContent
         title="Create one-time secret"
-        subTitle="Create an one-time secret to share with public for short-time."
+        subTitle="Create a one-time secret to share publicly for a short period."
         className="overflow-auto"
       >
         <form onSubmit={handleSubmit(onFormSubmit)}>
