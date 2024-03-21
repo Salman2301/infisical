@@ -63,7 +63,6 @@ export const registerSecretSharingRouter = async (server: FastifyZodProvider) =>
       };
     }
   });
-
   server.route({
     url: "/:workspaceId/secret-sharing/:secretSharingId",
     method: "DELETE",
@@ -81,6 +80,46 @@ export const registerSecretSharingRouter = async (server: FastifyZodProvider) =>
       const { secretSharing } = await server.services.secretSharing.deleteSecretSharing(req.params.secretSharingId);
 
       return { secretSharing };
+    }
+  });
+};
+
+export const registerSecretSharingPublicRouter = async (server: FastifyZodProvider) => {
+  server.route({
+    url: "/valid/:slug",
+    method: "GET",
+    schema: {
+      params: z.object({
+        slug: z.string()
+      }),
+      response: {
+        200: z.boolean()
+      }
+    },
+    handler: async (req) => {
+      const isValid = await server.services.secretSharing.validSecretSharing({
+        pathSlug: req.params.slug
+      });
+      return isValid;
+    }
+  });
+
+  server.route({
+    url: "/reveal/:slug",
+    method: "GET",
+    schema: {
+      params: z.object({
+        slug: z.string()
+      }),
+      response: {
+        200: z.string()
+      }
+    },
+    handler: async (req) => {
+      const secret = await server.services.secretSharing.revealSecretSharing({
+        pathSlug: req.params.slug
+      });
+      return secret;
     }
   });
 };

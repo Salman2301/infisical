@@ -32,7 +32,7 @@ type Props = {
 };
 
 const createSecretSharing = z.object({
-  secretContent: z.string({ required_error: "Secret Content is required field" }).trim().min(1, "Secret Content is required field"),
+  secretContent: z.string({ required_error: "Secret Content is required field" }).trim().min(1),
   expireAtValue: z.string().regex(/^\d+$/, "Enter a valid number"),
   expireAtUnit: z.enum(["day", "min", "hour"]),
   pathSlug: z.string().trim().min(1, "Path slug is required field"),
@@ -215,7 +215,7 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
                     className="group relative"
                     onClick={() => {
                       navigator.clipboard.writeText(
-                        `https://app.infisical.com/l/${field.value}` ?? ""
+                        `${window.location.origin}/l/${field.value}` ?? ""
                       );
                       setIsUrlCopied.on();
                     }}

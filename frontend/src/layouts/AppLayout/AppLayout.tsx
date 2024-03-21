@@ -563,6 +563,20 @@ export const AppLayout = ({ children }: LayoutProps) => {
                           </MenuItem>
                         </a>
                       </Link>
+                      <Link href={`/project/${currentWorkspace?.id}/sharing`} passHref>
+                        <a>
+                          <MenuItem
+                            isSelected={
+                              router.asPath === `/project/${currentWorkspace?.id}/sharing`
+                            }
+                            icon="sharing"
+                            // Prefer to move to lottie file with a premium account to the exact scale below instead of classname
+                            iconClassName="scale-[80%]"
+                          >
+                            {t("nav.menu.secret-sharing")}
+                          </MenuItem>
+                        </a>
+                      </Link>
                       <Link href={`/project/${currentWorkspace?.id}/audit-logs`} passHref>
                         <a>
                           <MenuItem
@@ -584,20 +598,6 @@ export const AppLayout = ({ children }: LayoutProps) => {
                             icon="system-outline-109-slider-toggle-settings"
                           >
                             {t("nav.menu.project-settings")}
-                          </MenuItem>
-                        </a>
-                      </Link>
-                      <Link href={`/project/${currentWorkspace?.id}/sharing`} passHref>
-                        <a>
-                          <MenuItem
-                            isSelected={
-                              router.asPath === `/project/${currentWorkspace?.id}/sharing`
-                            }
-                            icon="sharing"
-                            // Prefer to move to lottie file with a premium account to the exact scale below instead of classname
-                            iconClassName="scale-[85%]"
-                          >
-                            {t("nav.menu.secret-sharing")}
                           </MenuItem>
                         </a>
                       </Link>

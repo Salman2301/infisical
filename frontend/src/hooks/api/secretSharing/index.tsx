@@ -1,1 +1,1 @@
-export { useCreateWsSecretSharing, useDeleteWsSecretSharing, useGetWsSecretSharing } from "./query"
+export { useCreateWsSecretSharing, useDeleteWsSecretSharing, useGetWsSecretSharing } from "./queries"
