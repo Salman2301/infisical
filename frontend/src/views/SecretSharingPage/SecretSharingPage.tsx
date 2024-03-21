@@ -1,8 +1,10 @@
 import { useTranslation } from "react-i18next";
 
 import { useNotificationContext } from "@app/components/context/Notifications/NotificationProvider";
+import { DeleteActionModal } from "@app/components/v2";
 import { useWorkspace } from "@app/context";
-import { useDeleteWsSecretSharing,useGetWsSecretSharing } from "@app/hooks/api";
+import { usePopUp } from "@app/hooks";
+import { useDeleteWsSecretSharing, useGetWsSecretSharing } from "@app/hooks/api";
 import { TSecretSharingRes } from "@app/hooks/api/secretSharing/types";
 
 import { HeaderSecretSharing } from "./components/HeaderSecretSharing";
@@ -10,25 +12,29 @@ import { ListSecretSharing } from "./components/ListSecretSharing";
 
 export const SecretSharingPage = () => {
   const { t } = useTranslation();
-  
+
+  const { popUp, handlePopUpOpen, handlePopUpClose, handlePopUpToggle } = usePopUp([
+    "deleteSecretSharing"
+  ] as const);
+
   const { currentWorkspace } = useWorkspace();
   const workspaceId = currentWorkspace?.id || "";
 
   const { data } = useGetWsSecretSharing({ workspaceId });
   const { mutateAsync: deleteSecretSharing } = useDeleteWsSecretSharing({ workspaceId });
-  
+
   const { createNotification } = useNotificationContext();
 
   async function handleDelete(item: TSecretSharingRes) {
     try {
       if (!item || !item.id) throw new Error("Missing id to delete one-time secret");
       await deleteSecretSharing(item.id);
+      handlePopUpClose("deleteSecretSharing");
 
       createNotification({
         text: "Successfully delete secret sharing.",
         type: "success"
       });
-      
     } catch (err) {
       console.error(err);
       createNotification({
@@ -51,7 +57,19 @@ export const SecretSharingPage = () => {
         <HeaderSecretSharing />
         <ListSecretSharing
           secretSharing={data?.secretSharing}
-          onDelete={(item)=>handleDelete(item)}
+          onDelete={(item) => handlePopUpOpen("deleteSecretSharing", item)}
+        />
+
+        <DeleteActionModal
+          isOpen={popUp.deleteSecretSharing.isOpen}
+          title={`Are you sure want to delete ${
+            (popUp?.deleteSecretSharing?.data as { name: string })?.name || ""
+          }?`}
+          onChange={(isOpen) => handlePopUpToggle("deleteSecretSharing", isOpen)}
+          deleteKey={(popUp?.deleteSecretSharing?.data as TSecretSharingRes)?.pathSlug || "delete"}
+          onDeleteApproved={() =>
+            handleDelete(popUp?.deleteSecretSharing?.data as TSecretSharingRes)
+          }
         />
       </div>
     </div>
