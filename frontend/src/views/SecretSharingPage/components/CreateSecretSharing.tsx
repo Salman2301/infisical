@@ -203,7 +203,11 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
                 isError={Boolean(error)}
                 errorText={error?.message}
               >
-                <Input {...field} className="ring-1 ring-bunker-400/60" />
+                <Input
+                  {...field}
+                  type="password"
+                  className="ring-1 ring-bunker-400/60"
+                />
               </FormControl>
             )}
           />
