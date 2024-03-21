@@ -67,6 +67,37 @@ export const registerSecretSharingRouter = async (server: FastifyZodProvider) =>
   });
   server.route({
     url: "/:workspaceId/secret-sharing/:secretSharingId",
+    method: "PUT",
+    schema: {
+      params: z.object({
+        workspaceId: z.string(),
+        secretSharingId: z.string()
+      }),
+      body: z.object({
+        expireAtValue: z.string().regex(/^\d+$/, "Enter a valid number"),
+        expireAtDate: z.string(),
+        expireAtUnit: z.enum(["day", "min", "hour"])
+      }),
+      response: {
+        200: z.object({ secretSharing: SecretSharingSchema })
+      }
+    },
+    onRequest: verifyAuth([AuthMode.JWT]),
+    handler: async (req) => {
+      const secretSharing = await server.services.secretSharing.updateSecretSharing({
+        id: req.params.secretSharingId,
+        projectId: req.params.workspaceId,
+        expireAtValue: Number(req.body.expireAtValue),
+        expireAtDate: new Date(req.body.expireAtDate),
+        expireAtUnit: req.body.expireAtUnit
+      });
+      return {
+        secretSharing
+      };
+    }
+  });
+  server.route({
+    url: "/:workspaceId/secret-sharing/:secretSharingId",
     method: "DELETE",
     schema: {
       params: z.object({

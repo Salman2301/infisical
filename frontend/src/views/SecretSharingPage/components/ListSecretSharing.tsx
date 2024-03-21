@@ -2,7 +2,10 @@ import { twMerge } from "tailwind-merge";
 
 import { useNotificationContext } from "@app/components/context/Notifications/NotificationProvider";
 import { EmptyState, Select, SelectItem } from "@app/components/v2";
+import { usePopUp } from "@app/hooks";
 import { TSecretSharingRes } from "@app/hooks/api/secretSharing/types";
+
+import { UpdateSecretSharing } from "./UpdateDuration";
 
 type Props = {
   secretSharing?: TSecretSharingRes[];
@@ -10,6 +13,7 @@ type Props = {
 };
 
 export const ListSecretSharing = ({ secretSharing, onDelete }: Props) => {
+  const { popUp, handlePopUpToggle, handlePopUpOpen } = usePopUp(["updateSecretSharing"] as const);
   const { createNotification } = useNotificationContext();
 
   function handleValueChange(value: string, item: TSecretSharingRes) {
@@ -27,7 +31,7 @@ export const ListSecretSharing = ({ secretSharing, onDelete }: Props) => {
         window.open(url, "blank");
         break;
       case "duration":
-        // Todo: Open update duration modal
+        handlePopUpOpen("updateSecretSharing", item);
         break;
       case "delete":
         onDelete?.(item);
@@ -86,6 +90,12 @@ export const ListSecretSharing = ({ secretSharing, onDelete }: Props) => {
           title="No one-time secrets found. Create a new one to manage your one-time secrets."
         />
       )}
+      
+      <UpdateSecretSharing
+        secretSharing={popUp.updateSecretSharing.data as TSecretSharingRes}
+        isOpen={popUp.updateSecretSharing.isOpen}
+        onToggle={(isOpen) => handlePopUpToggle("updateSecretSharing", isOpen)}
+      />
     </div>
   );
 };

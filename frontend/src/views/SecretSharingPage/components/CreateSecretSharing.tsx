@@ -27,7 +27,7 @@ type Props = {
   onToggle: (isOpen: boolean) => void;
 };
 
-const createSecretSharing = z.object({
+const createSecretSharingSchema = z.object({
   secretContent: z.string({ required_error: "Secret Content is required field" }).trim().min(1),
   expireAtValue: z.string().regex(/^\d+$/, "Enter a valid number"),
   expireAtUnit: z.enum(["day", "min", "hour"]),
@@ -37,7 +37,7 @@ const createSecretSharing = z.object({
   isPasswordProtected: z.boolean().optional()
 });
 
-type FormData = z.infer<typeof createSecretSharing>;
+type FormData = z.infer<typeof createSecretSharingSchema>;
 
 export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element => {
   const {
@@ -47,7 +47,7 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
     formState: { isSubmitting },
     handleSubmit
   } = useForm<FormData>({
-    resolver: zodResolver(createSecretSharing),
+    resolver: zodResolver(createSecretSharingSchema),
     defaultValues: {
       expireAtValue: "15",
       expireAtUnit: "min",
@@ -59,7 +59,7 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
   const { currentWorkspace } = useWorkspace();
   const workspaceId = currentWorkspace?.id || "";
 
-  const { mutateAsync: createServiceSharing } = useCreateWsSecretSharing({ workspaceId });
+  const { mutateAsync: createSecretSharing } = useCreateWsSecretSharing({ workspaceId });
 
   useEffect(() => {
     setValue("pathSlug", randomSlug());
@@ -95,7 +95,7 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
           throw new Error("Invalid expire unit");
       }
       const { cipher, iv } = await encrypt(secretContent, password);
-      await createServiceSharing({
+      await createSecretSharing({
         projectId: workspaceId,
         expireAtDate,
         expireAtValue,
@@ -107,11 +107,10 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
         isPasswordProtected: !!password
       });
 
-      // Show a dialog to copy expireAtDate publish sharable URL?
       onToggle(false);
       reset();
       createNotification({
-        text: "Successfully created secret sharing",
+        text: "Successfully created one-time secret",
         type: "success"
       });
     } catch (error) {

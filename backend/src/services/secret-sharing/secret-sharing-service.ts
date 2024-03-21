@@ -6,6 +6,14 @@ type TSecretSharingServiceFactoryDep = {
   secretSharingDAL: TSecretSharingDALFactory;
 };
 
+type TSecretSharingUpdate = {
+  id: string;
+  projectId: string;
+  expireAtValue: number;
+  expireAtDate: Date;
+  expireAtUnit: string;
+};
+
 type TSecretSharingRevealRes = { cipher: string; iv: string; isPasswordProtected: boolean };
 export type TSecretSharingServiceFactory = ReturnType<typeof secretSharingServiceFactory>;
 
@@ -20,6 +28,12 @@ export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharing
   const createSecretSharing: TSecretSharingDALFactory["create"] = async (data): Promise<TSecretSharing> => {
     const newSecretSharing = await secretSharingDAL.create(data);
     return newSecretSharing;
+  };
+
+  const updateSecretSharing = async (data: TSecretSharingUpdate): Promise<TSecretSharing> => {
+    const { id, ...restData } = data;
+    const updatedSecretSharing = await secretSharingDAL.updateById(id, restData);
+    return updatedSecretSharing;
   };
 
   const deleteSecretSharing = async (id: string): Promise<{ secretSharing: TSecretSharing }> => {
@@ -60,6 +74,7 @@ export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharing
     listSecretSharing,
     createSecretSharing,
     revealSecretSharing,
+    updateSecretSharing,
     deleteSecretSharing
   };
 };

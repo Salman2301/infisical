@@ -59,7 +59,6 @@ export const ViewSecretSharing = () => {
 
   useEffect(() => {
     if (!revealSecret) return;
-    console.log({ a: revealSecret.isPasswordProtected, revealSecret });
     if (revealSecret.isPasswordProtected) {
       setCurrView(ViewState.RequirePassword);
     } else {

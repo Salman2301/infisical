@@ -3,7 +3,6 @@ import { SECRET_SHARING_PASSPHRASE } from "@app/components/utilities/config";
 async function genAesKey(passphrase?: string) {
   const encoder = new TextEncoder();
   const passphraseBuffer = encoder.encode(passphrase || SECRET_SHARING_PASSPHRASE);
-  console.log({ SECRET_SHARING_PASSPHRASE })
   const derivedKeyTypeOpts = {
     keyFormat: "raw",
     algorithm: { name: "PBKDF2" },

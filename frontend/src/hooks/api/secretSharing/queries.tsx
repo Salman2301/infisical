@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiRequest } from "@app/config/request";
 
-import { TSecretSharing, TSecretSharingRes } from "./types";
+import { TSecretSharing, TSecretSharingDuration, TSecretSharingRes, UseWsSecretSharingDurationMutationProps, UseWsSecretSharingMutationProps } from "./types";
 
 const secretSharingKeys = {
   getSecretSharingWorkspace: (workspaceId: string) => [{ workspaceId }, "secret-sharing"] as const,
@@ -34,9 +34,8 @@ const fetchValidSecretSharing = async (slug: string) => {
 };
 
 
-type UseGetWorkspaceSecretSharingProps = { workspaceId: string };
 
-export const useGetWsSecretSharing = ({ workspaceId }: UseGetWorkspaceSecretSharingProps) => {
+export const useGetWsSecretSharing = ({ workspaceId }: UseWsSecretSharingMutationProps) => {
   return useQuery({
     queryKey: secretSharingKeys.getSecretSharingWorkspace(workspaceId),
     queryFn: () => fetchWorkspaceSecretSharing(workspaceId),
@@ -62,7 +61,7 @@ export const useValidSecretSharing = ({ slug }: {slug: string}) => {
 };
 
 // mutation
-export const useCreateWsSecretSharing = ({ workspaceId }: UseGetWorkspaceSecretSharingProps) => {
+export const useCreateWsSecretSharing = ({ workspaceId }: UseWsSecretSharingMutationProps) => {
   const queryClient = useQueryClient();
 
   return useMutation<TSecretSharingRes, {}, TSecretSharing>({
@@ -80,7 +79,26 @@ export const useCreateWsSecretSharing = ({ workspaceId }: UseGetWorkspaceSecretS
   });
 };
 
-export const useDeleteWsSecretSharing = ({ workspaceId }: UseGetWorkspaceSecretSharingProps) => {
+
+export const useUpdateWsSecretSharing = ({ workspaceId, secretSharingId }: UseWsSecretSharingDurationMutationProps) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<TSecretSharingRes, {}, TSecretSharingDuration>({
+    mutationFn: async (body) => {
+      const { data } = await apiRequest.put(
+        `/api/v1/workspace/${workspaceId}/secret-sharing/${secretSharingId}`,
+        body
+      );
+
+      return data?.secretSharing;
+    },
+    onSuccess: ({ projectId }) => {
+      queryClient.invalidateQueries(secretSharingKeys.getSecretSharingWorkspace(projectId));
+    }
+  });
+};
+
+export const useDeleteWsSecretSharing = ({ workspaceId }: UseWsSecretSharingMutationProps) => {
   const queryClient = useQueryClient();
 
   return useMutation<TSecretSharingRes, {}, string>({
