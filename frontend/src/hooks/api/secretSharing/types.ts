@@ -13,4 +13,5 @@ export type TSecretSharing = {
   expireAtValue: string;
   expireAtUnit: "min" | "hour" | "day";
   projectId: string;
+  iv: string;
 }

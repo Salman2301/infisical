@@ -23,6 +23,7 @@ export async function up(knex: Knex): Promise<void> {
       t.string("expireAtUnit").notNullable();
       t.datetime("expireAtDate").notNullable();
       t.datetime("lastReadAt");
+      t.string("iv").notNullable();
       t.string("projectId").notNullable();
       t.foreign("projectId").references("id").inTable(TableName.Project).onDelete("CASCADE");
     });

@@ -17,7 +17,6 @@ export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharing
   };
 
   const createSecretSharing: TSecretSharingDALFactory["create"] = async (data): Promise<TSecretSharing> => {
-    // TODO: ENCRYPT THE CONTENT BEFORE STORING
     const newSecretSharing = await secretSharingDAL.create(data);
     return newSecretSharing;
   };
@@ -40,14 +39,16 @@ export const secretSharingServiceFactory = ({ secretSharingDAL }: TSecretSharing
     return isValidSecret(currSecret);
   };
 
-  const revealSecretSharing = async ({ pathSlug }: FindByPathSlug): Promise<string> => {
+  const revealSecretSharing = async ({ pathSlug }: FindByPathSlug): Promise<{ cipher: string; iv: string }> => {
     const currSecret = await secretSharingDAL.findOne({ pathSlug });
     if (!isValidSecret(currSecret)) throw new Error("Invalid secret");
     if (currSecret.readOnlyOnce) {
       await secretSharingDAL.deleteById(currSecret.id);
     }
-    // todo: decrypt content
-    return currSecret.secretContent;
+    return {
+      cipher: currSecret.secretContent,
+      iv: currSecret.iv
+    };
   };
 
   return {

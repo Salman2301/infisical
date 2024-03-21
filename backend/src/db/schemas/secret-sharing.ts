@@ -15,11 +15,12 @@ export const SecretSharingSchema = z.object({
   read: z.boolean().default(false).nullable().optional(),
   readOnlyOnce: z.boolean().default(false).nullable().optional(),
   passphrase: z.string().nullable().optional(),
-  pathSlug: z.string().nullable().optional(),
-  expireAtValue: z.number().nullable().optional(),
-  expireAtUnit: z.string().nullable().optional(),
+  pathSlug: z.string(),
+  expireAtValue: z.number(),
+  expireAtUnit: z.string(),
   expireAtDate: z.date(),
   lastReadAt: z.date().nullable().optional(),
+  iv: z.string(),
   projectId: z.string()
 });
 

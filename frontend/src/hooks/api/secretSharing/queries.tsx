@@ -19,7 +19,7 @@ const fetchWorkspaceSecretSharing = async (workspaceId: string) => {
 
 const fetchRevealSecretSharing = async (slug: string, isValid: boolean) => {
   if (!slug || !isValid) return null;
-  const { data } = await apiRequest.get<string>(
+  const { data } = await apiRequest.get<{cipher: string, iv: string}>(
     `/api/v1/secret-sharing/reveal/${slug}`
   );
   return data;

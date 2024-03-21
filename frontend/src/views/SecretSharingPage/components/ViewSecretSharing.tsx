@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { FormLabel, TextArea } from "@app/components/v2";
+import { decrypt } from "@app/helpers/secretSharing";
 import {
   useRevealSecretSharing,
   useValidSecretSharing
@@ -16,9 +19,10 @@ enum ViewState {
 
 export const ViewSecretSharing = () => {
   const router = useRouter();
-
   const [currView, setCurrView] = useState<ViewState>(ViewState.Loading);
   const [pathSlug, setPathSlug] = useState<string>("");
+  const [decryptSecret, setDecryptSecret] = useState<string>("");
+
   const { data: validSecret, isLoading } = useValidSecretSharing({ slug: pathSlug });
   const { data: revealSecret } = useRevealSecretSharing({ slug: pathSlug, isValid: !!validSecret });
 
@@ -32,7 +36,16 @@ export const ViewSecretSharing = () => {
   }, [validSecret, isLoading]);
 
   useEffect(() => {
-    if (revealSecret) setCurrView(ViewState.Revealed);
+    if (!revealSecret) return;
+    decrypt(revealSecret.cipher, revealSecret.iv)
+      .then((decryptedSecret) => {
+        setDecryptSecret(decryptedSecret.data);
+        setCurrView(ViewState.Revealed);
+      })
+      .catch((err) => {
+        console.error(err);
+        setCurrView(ViewState.Invalid);
+      });
   }, [revealSecret]);
 
   return (
@@ -41,12 +54,13 @@ export const ViewSecretSharing = () => {
       {ViewState.Revealed === currView && (
         <div className="w-[480px]">
           <FormLabel label="Your secret" />
-          <TextArea rows={8} value={revealSecret!} readOnly className="ring-1" />
+          <TextArea rows={8} value={decryptSecret!} readOnly className="ring-1" />
         </div>
       )}
       {ViewState.Invalid === currView && (
-        <div>
-          <p className="my-4 text-xl">Failed to find the secret!</p>
+        <div className="flex flex-col items-center justify-center gap-2 rounded-md bg-bunker-500 px-12 py-8 ring-1 ring-red-500/60 ">
+          <FontAwesomeIcon icon={faExclamationTriangle} size="2xl" />
+          <p className="my-4 text-lg text-gray-400">Failed to find or decrypt the secret!</p>
         </div>
       )}
     </div>

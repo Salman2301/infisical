@@ -40,7 +40,8 @@ export const registerSecretSharingRouter = async (server: FastifyZodProvider) =>
         expireAtUnit: z.enum(["day", "min", "hour"]),
         pathSlug: z.string().trim().min(1, "Path slug is required field"),
         passphrase: z.string().trim().optional(),
-        readOnlyOnce: z.boolean().optional()
+        readOnlyOnce: z.boolean().optional(),
+        iv: z.string().trim()
       }),
       response: {
         200: z.object({ secretSharing: SecretSharingSchema })
@@ -56,7 +57,8 @@ export const registerSecretSharingRouter = async (server: FastifyZodProvider) =>
         expireAtUnit: req.body.expireAtUnit,
         pathSlug: req.body.pathSlug,
         passphrase: req.body.passphrase,
-        readOnlyOnce: req.body.readOnlyOnce
+        readOnlyOnce: req.body.readOnlyOnce,
+        iv: req.body.iv
       });
       return {
         secretSharing
@@ -112,7 +114,10 @@ export const registerSecretSharingPublicRouter = async (server: FastifyZodProvid
         slug: z.string()
       }),
       response: {
-        200: z.string()
+        200: z.object({
+          cipher: z.string(),
+          iv: z.string()
+        })
       }
     },
     handler: async (req) => {

@@ -22,6 +22,7 @@ import {
   TextArea
 } from "@app/components/v2";
 import { useWorkspace } from "@app/context";
+import { encrypt } from "@app/helpers/secretSharing";
 import { randomSlug } from "@app/helpers/slug";
 import { useToggle } from "@app/hooks";
 import { useCreateWsSecretSharing } from "@app/hooks/api";
@@ -67,7 +68,7 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
   const [isUrlCopied, setIsUrlCopied] = useToggle(false);
 
   useEffect(() => {
-    setValue("pathSlug", randomSlug())
+    setValue("pathSlug", randomSlug());
     if (!isOpen) {
       reset();
     }
@@ -107,6 +108,8 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
         default:
           throw new Error("Invalid expire unit");
       }
+
+      const { cipher, iv } = await encrypt(secretContent);
       await createServiceSharing({
         projectId: workspaceId,
         expireAtDate,
@@ -114,7 +117,8 @@ export const CreateSecretSharing = ({ isOpen, onToggle }: Props): JSX.Element =>
         expireAtUnit,
         pathSlug,
         readOnlyOnce: !!readOnlyOnce,
-        secretContent
+        secretContent: cipher,
+        iv
       });
 
       // Show a dialog to copy expireAtDate publish sharable URL?
